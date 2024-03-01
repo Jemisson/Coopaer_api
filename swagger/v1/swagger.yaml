@@ -12,7 +12,7 @@ tags:
     description: 'Registro, login e logout'
 
 paths:
-  /login:
+  /admin/login:
     post:
       summary: Realiza o login do usuário.
       tags:
@@ -38,7 +38,7 @@ paths:
           description: E-mail ou senha inválidos.
           schema:
             $ref: '#/definitions/InvalidCredentialsResponse'
-  /logout:
+  /admin/logout:
     delete:
       summary: Realiza o logout do usuário.
       tags:
@@ -57,6 +57,53 @@ paths:
           description: Não foi possível encontrar uma autenticação.
           schema:
             $ref: '#/definitions/LogoutErrorResponse'
+
+  /member/login:
+    post:
+      summary: Realiza o login do Cooperado.
+      tags:
+        - 'Acesso'
+      description: Autentica o cooperado com base no e-mail e senha fornecidos. O token da sessão de usuário (Authorization) é informado no response headers da requisição.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: member
+          description: Credenciais do cooperado para login.
+          required: true
+          schema:
+            $ref: '#/definitions/LoginMemberRequest'
+      responses:
+        200:
+          description: Cooperado autenticado com sucesso.
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        401:
+          description: E-mail ou senha inválidos.
+          schema:
+            $ref: '#/definitions/InvalidCredentialsResponse'
+  /member/logout:
+    delete:
+      summary: Realiza o logout do cooperado.
+      tags:
+        - 'Acesso'
+      description: Encerra a sessão do cooperado.
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Cooperado saiu com sucesso.
+          schema:
+            $ref: '#/definitions/LogoutSuccessResponse'
+        401:
+          description: Não foi possível encontrar uma autenticação.
+          schema:
+            $ref: '#/definitions/LogoutErrorResponse'
+
 
 definitions:
   LoginRequest:
@@ -110,6 +157,19 @@ definitions:
           message:
             type: string
             example: "Invalid Email or password"
+
+  LoginMemberRequest:
+    type: object
+    properties:
+      member:
+        type: object
+        properties:
+          email:
+            type: string
+            example: "member@member.com"
+          password:
+            type: string
+            example: "123456"
 
   LogoutSuccessResponse:
     type: object

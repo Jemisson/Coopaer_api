@@ -1,18 +1,28 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
+
   devise_for :admins, path: '', path_names: {
-                                  sign_in: 'login',
-                                  sign_out: 'logout',
-                                  registration: 'signup'
+                                  sign_in: 'admin/login',
+                                  sign_out: 'admin/logout',
+                                  registration: 'admin/signup'
                                 },
                       controllers: {
                         sessions: 'admins/sessions',
                         registrations: 'admins/registrations'
                       }
 
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  devise_for :members, path: '', path_names: {
+                                   sign_in: 'member/login',
+                                   sign_out: 'member/logout',
+                                   registration: 'member/signup'
+                                 },
+                       controllers: {
+                         sessions: 'members/sessions',
+                         registrations: 'members/registrations'
+                       }
 
   namespace :api do
     namespace :v1 do
