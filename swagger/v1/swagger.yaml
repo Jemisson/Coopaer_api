@@ -1,0 +1,137 @@
+swagger: '2.0'
+
+info:
+  version: 1.0.0
+  title: Coopaer API
+
+servers:
+  - url: http://localhost:3000/api/v1
+
+tags:
+  - name: 'Acesso'
+    description: 'Registro, login e logout'
+
+paths:
+  /login:
+    post:
+      summary: Realiza o login do usuário.
+      tags:
+        - 'Acesso'
+      description: Autentica o usuário com base no e-mail e senha fornecidos. O token da sessão de usuário (Authorization) é informado no response headers da requisição.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Credenciais do usuário para login.
+          required: true
+          schema:
+            $ref: '#/definitions/LoginRequest'
+      responses:
+        200:
+          description: Usuário autenticado com sucesso.
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        401:
+          description: E-mail ou senha inválidos.
+          schema:
+            $ref: '#/definitions/InvalidCredentialsResponse'
+  /logout:
+    delete:
+      summary: Realiza o logout do usuário.
+      tags:
+        - 'Acesso'
+      description: Encerra a sessão do usuário.
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Usuário saiu com sucesso.
+          schema:
+            $ref: '#/definitions/LogoutSuccessResponse'
+        401:
+          description: Não foi possível encontrar uma autenticação.
+          schema:
+            $ref: '#/definitions/LogoutErrorResponse'
+
+definitions:
+  LoginRequest:
+    type: object
+    properties:
+      admin:
+        type: object
+        properties:
+          email:
+            type: string
+            example: "admin@admin.com"
+          password:
+            type: string
+            example: "123456"
+  LoginResponse:
+    type: object
+    properties:
+      status:
+        type: object
+        properties:
+          code:
+            type: integer
+            example: 200
+          message:
+            type: string
+            example: "Autenticado com sucesso"
+          data:
+            type: object
+            properties:
+              admin:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  email:
+                    type: string
+                    example: "jemison321@gmail.com"
+                  name:
+                    type: string
+                    example: "Jemison"
+  InvalidCredentialsResponse:
+    type: object
+    properties:
+      status:
+        type: object
+        properties:
+          code:
+            type: integer
+            example: 401
+          message:
+            type: string
+            example: "Invalid Email or password"
+
+  LogoutSuccessResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 200
+      message:
+        type: string
+        example: "Saiu com sucesso"
+  LogoutErrorResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 401
+      message:
+        type: string
+        example: "Não foi possível encontrar uma autenticação"
+
+securityDefinitions:
+    BearerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
