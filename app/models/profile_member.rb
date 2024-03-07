@@ -1,0 +1,2 @@
+class ProfileMember < ApplicationRecord
+end
