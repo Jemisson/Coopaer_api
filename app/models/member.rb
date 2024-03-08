@@ -2,6 +2,7 @@
 
 class Member < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
+  has_one :profile_member
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

@@ -10,9 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_07_042736) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_07_215243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "academic_educationals", force: :cascade do |t|
+    t.string "degree"
+    t.string "course"
+    t.string "number_register"
+    t.bigint "profile_member_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_member_id"], name: "index_academic_educationals_on_profile_member_id"
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "street"
+    t.integer "number"
+    t.string "neighborhood"
+    t.string "city"
+    t.string "uf"
+    t.string "mailing"
+    t.string "email_mailing"
+    t.bigint "profile_member_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_member_id"], name: "index_addresses_on_profile_member_id"
+  end
 
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,6 +50,27 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_042736) do
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["jti"], name: "index_admins_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "bank_accounts", force: :cascade do |t|
+    t.string "account"
+    t.string "agency"
+    t.string "bank"
+    t.string "account_type"
+    t.string "pix"
+    t.bigint "profile_member_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_member_id"], name: "index_bank_accounts_on_profile_member_id"
+  end
+
+  create_table "dependents", force: :cascade do |t|
+    t.string "name"
+    t.date "birth"
+    t.bigint "profile_member_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_member_id"], name: "index_dependents_on_profile_member_id"
   end
 
   create_table "members", force: :cascade do |t|
@@ -43,6 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_042736) do
   end
 
   create_table "profile_members", force: :cascade do |t|
+    t.bigint "member_id", null: false
     t.string "name"
     t.string "cell_phone"
     t.string "phone"
@@ -59,6 +105,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_07_042736) do
     t.string "city_registration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_profile_members_on_member_id"
   end
 
+  add_foreign_key "academic_educationals", "profile_members"
+  add_foreign_key "addresses", "profile_members"
+  add_foreign_key "bank_accounts", "profile_members"
+  add_foreign_key "dependents", "profile_members"
+  add_foreign_key "profile_members", "members"
 end
