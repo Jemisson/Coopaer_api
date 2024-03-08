@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # routes
+      resources :profile_members, except: %i[destroy]
     end
   end
 end

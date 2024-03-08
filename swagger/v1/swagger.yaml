@@ -104,6 +104,30 @@ paths:
           schema:
             $ref: '#/definitions/LogoutErrorResponse'
 
+  /api/v1/profile_members:
+    get:
+      summary: Obtém o perfil de um membro específico.
+      tags:
+        - 'Membro'
+      description: Retorna as informações do perfil de um membro com base no ID fornecido.
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Número da página a ser recuperada.
+          required: false
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Perfil do membro recuperado com sucesso.
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        404:
+          description: Perfil do membro não encontrado.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
 
 definitions:
   LoginRequest:
@@ -189,6 +213,217 @@ definitions:
       message:
         type: string
         example: "Não foi possível encontrar uma autenticação"
+
+  MemberProfileResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "25"
+            type:
+              type: string
+              example: "profile_member"
+            attributes:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Laverne O'Connell Sr."
+                cell_phone:
+                  type: string
+                  example: "979-728-6895"
+                phone:
+                  type: string
+                  example: "586-007-7671 x634"
+                birth:
+                  type: string
+                  example: "2005-02-21"
+                cpf:
+                  type: string
+                  example: "10778423411"
+                rg:
+                  type: string
+                  example: "188126739"
+                gender:
+                  type: string
+                  example: "female"
+                marital_status:
+                  type: string
+                  example: "viúvo"
+                pis:
+                  type: string
+                  example: "14459521948"
+                expedition:
+                  type: string
+                  example: "North Eleonor"
+                mother_name:
+                  type: string
+                  example: "Otha Tromp"
+                father_name:
+                  type: string
+                  example: "Ebonie Feest"
+                municipal_registration:
+                  type: string
+                  example: "11794469"
+                city_registration:
+                  type: string
+                  example: "29704263"
+                member:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 25
+                    email:
+                      type: string
+                      example: "paul.okon@willms-friesen.test"
+                    created_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.322Z"
+                    updated_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.322Z"
+                academic_educationals:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 49
+                      degree:
+                        type: string
+                        example: "Bachelor of Nursing"
+                      course:
+                        type: string
+                        example: "Bachelor of Criminology"
+                      number_register:
+                        type: string
+                        example: "17714943"
+                      profile_member_id:
+                        type: integer
+                        example: 25
+                      created_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.333Z"
+                      updated_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.333Z"
+                address:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 25
+                    street:
+                      type: string
+                      example: "Kovacek Fields"
+                    number:
+                      type: integer
+                      example: 77846
+                    neighborhood:
+                      type: string
+                      example: "Summer Pointe"
+                    city:
+                      type: string
+                      example: "West Normaborough"
+                    uf:
+                      type: string
+                      example: "NC"
+                    mailing:
+                      type: string
+                      example: "f"
+                    email_mailing:
+                      type: string
+                      example: "bryant_crist@powlowski.test"
+                    profile_member_id:
+                      type: integer
+                      example: 25
+                    created_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.338Z"
+                    updated_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.338Z"
+                bank_account:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 25
+                    account:
+                      type: string
+                      example: "2661460018"
+                    agency:
+                      type: string
+                      example: "242641052"
+                    bank:
+                      type: string
+                      example: "ALLIED BANK PHILIPPINES (UK) PLC"
+                    account_type:
+                      type: string
+                      example: "435"
+                    pix:
+                      type: string
+                      example: "95999207500"
+                    profile_member_id:
+                      type: integer
+                      example: 25
+                    created_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.341Z"
+                    updated_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.341Z"
+                dependents:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 49
+                      name:
+                        type: string
+                        example: "Michel Stokes"
+                      birth:
+                        type: string
+                        example: "2021-01-20"
+                      profile_member_id:
+                        type: integer
+                        example: 25
+                      created_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.343Z"
+                      updated_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.343Z"
+      meta:
+        type: object
+        properties:
+          total_count:
+            type: integer
+            example: 25
+          total_pages:
+            type: integer
+            example: 3
+          current_page:
+            type: integer
+            example: 1
+          per_page:
+            type: integer
+            example: 10
+  NotFoundResponse:
+    type: object
+    properties:
+      error:
+        type: string
+        example: "Não encontrado."
 
 securityDefinitions:
     BearerAuth:
