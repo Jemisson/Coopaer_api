@@ -10,6 +10,8 @@ servers:
 tags:
   - name: 'Acesso'
     description: 'Registro, login e logout'
+  - name: 'Cooperado'
+    description: 'Dados dos cooperados'
 
 paths:
   /admin/login:
@@ -108,7 +110,7 @@ paths:
     get:
       summary: Obtém o perfil de um membro específico.
       tags:
-        - 'Membro'
+        - 'Cooperado'
       description: Retorna as informações do perfil de um membro com base no ID fornecido.
       produces:
         - application/json
@@ -128,6 +130,28 @@ paths:
           description: Perfil do membro não encontrado.
           schema:
             $ref: '#/definitions/NotFoundResponse'
+    post:
+      summary: Cria um novo perfil de membro
+      tags:
+        - 'Cooperado'
+      description: Cria um novo perfil de membro com base nos dados fornecidos.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          description: Dados do cooperado a sere criado.
+          required: true
+          schema:
+            $ref: '#/definitions/NewMemberProfileRequest'
+      responses:
+        '200':
+          description: Perfil do membro criado com sucesso.
+        '401':
+          description: Não autorizado
+        '400':
+          description: Dados inválidos
 
 definitions:
   LoginRequest:
@@ -418,6 +442,139 @@ definitions:
           per_page:
             type: integer
             example: 10
+  NewMemberProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Laverne O'Connell Sr."
+        cell_phone:
+          type: string
+          example: "979-728-6895"
+        phone:
+          type: string
+          example: "586-007-7671 x634"
+        birth:
+          type: string
+          format: date
+          example: "2005-02-21"
+        cpf:
+          type: string
+          example: "10778423411"
+        rg:
+          type: string
+          example: "188126739"
+        gender:
+          type: string
+          example: "female"
+        marital_status:
+          type: string
+          example: "viúvo"
+        pis:
+          type: string
+          example: "14459521948"
+        expedition:
+          type: string
+          example: "North Eleonor"
+        mother_name:
+          type: string
+          example: "Otha Tromp"
+        father_name:
+          type: string
+          example: "Ebonie Feest"
+        municipal_registration:
+          type: string
+          example: "11794469"
+        city_registration:
+          type: string
+          example: "29704263"
+        member_attributes:
+          type: object
+          properties:
+            email:
+              type: string
+              example: "paul.okon@willms-friesen.test"
+        academic_educationals_attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              degree:
+                type: string
+                example: "Bachelor of Nursing"
+              course:
+                type: string
+                example: "Bachelor of Criminology"
+              number_register:
+                type: string
+                example: "17714943"
+              profile_member_id:
+                type: integer
+                example: 25
+        addresses_attributes:
+          type: object
+          properties:
+            street:
+              type: string
+              example: "Kovacek Fields"
+            number:
+              type: integer
+              example: 77846
+            neighborhood:
+              type: string
+              example: "Summer Pointe"
+            city:
+              type: string
+              example: "West Normaborough"
+            uf:
+              type: string
+              example: "NC"
+            mailing:
+              type: string
+              example: "f"
+            email_mailing:
+              type: string
+              example: "bryant_crist@powlowski.test"
+            profile_member_id:
+              type: integer
+              example: 25
+        bank_accounts_attributes:
+          type: object
+          properties:
+            account:
+              type: string
+              example: "2661460018"
+            agency:
+              type: string
+              example: "242641052"
+            bank:
+              type: string
+              example: "ALLIED BANK PHILIPPINES (UK) PLC"
+            account_type:
+              type: string
+              example: "435"
+            pix:
+              type: string
+              example: "95999207500"
+            profile_member_id:
+              type: integer
+              example: 25
+        dependents_attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Michel Stokes"
+              birth:
+                type: string
+                format: date
+                example: "2021-01-20"
+              profile_member_id:
+                type: integer
+                example: 25
+
   NotFoundResponse:
     type: object
     properties:

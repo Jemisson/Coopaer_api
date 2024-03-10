@@ -9,7 +9,7 @@ class ProfileMember < ApplicationRecord
   has_many :dependents
   has_many :academic_educationals
 
-  enum gender: { female: 0, male: 0 }
+  enum gender: { female: 0, male: 1 }
 
   accepts_nested_attributes_for :member, :academic_educationals, :address, :bank_account, :dependents,
                                 reject_if: :all_blank, allow_destroy: true
