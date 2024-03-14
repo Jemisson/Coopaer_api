@@ -131,7 +131,7 @@ paths:
           schema:
             $ref: '#/definitions/NotFoundResponse'
     post:
-      summary: Cria um novo perfil de membro
+      summary: Cria um novo perfil de membro.
       tags:
         - 'Cooperado'
       description: Cria um novo perfil de membro com base nos dados fornecidos.
@@ -141,17 +141,82 @@ paths:
         - application/json
       parameters:
         - in: body
-          description: Dados do cooperado a sere criado.
+          name: body
+          description: Dados do novo perfil de membro a serem criados.
           required: true
           schema:
-            $ref: '#/definitions/NewMemberProfileRequest'
+            $ref: '#/definitions/NewMemberProfile'
       responses:
-        '200':
+        201:
           description: Perfil do membro criado com sucesso.
-        '401':
-          description: Não autorizado
-        '400':
-          description: Dados inválidos
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        400:
+          description: Erro de requisição inválida.
+          schema:
+            $ref: '#/definitions/MemberBadRequestResponse'
+  /api/v1/profile_members/{id}:
+    get:
+      summary: Obtém o perfil de um cooperado específico.
+      tags:
+        - 'Cooperado'
+      description: Retorna as informações do perfil de um cooperado com base no ID fornecido.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID do cooperado a ser recuperado.
+          required: true
+          type: integer
+          example: 1
+      responses:
+        200:
+          description: Perfil do membro recuperado com sucesso.
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        401:
+          description: Não autorizado. Token de acesso inválido ou expirado.
+          schema:
+            $ref: '#/definitions/UnauthorizedResponse'
+        404:
+          description: Perfil do membro não encontrado.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+    put:
+      summary: Atualiza o perfil de um membro específico.
+      tags:
+        - 'Cooperado'
+      description: Atualiza as informações do perfil de um membro com base no ID fornecido.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID do cooperado a ser atualizado.
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Dados do cooperado a serem alterados.
+          required: true
+          schema:
+            $ref: '#/definitions/ProfileMemberUpdateRequest'
+      responses:
+        200:
+          description: Perfil do cooperado atualizado com sucesso.
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        400:
+          description: Requisição inválida. Verifique os parâmetros enviados.
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
+        404:
+          description: Perfil do cooperado não encontrado.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
 
 definitions:
   LoginRequest:
@@ -205,7 +270,6 @@ definitions:
           message:
             type: string
             example: "Invalid Email or password"
-
   LoginMemberRequest:
     type: object
     properties:
@@ -442,145 +506,304 @@ definitions:
           per_page:
             type: integer
             example: 10
-  NewMemberProfileRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          example: "Laverne O'Connell Sr."
-        cell_phone:
-          type: string
-          example: "979-728-6895"
-        phone:
-          type: string
-          example: "586-007-7671 x634"
-        birth:
-          type: string
-          format: date
-          example: "2005-02-21"
-        cpf:
-          type: string
-          example: "10778423411"
-        rg:
-          type: string
-          example: "188126739"
-        gender:
-          type: string
-          example: "female"
-        marital_status:
-          type: string
-          example: "viúvo"
-        pis:
-          type: string
-          example: "14459521948"
-        expedition:
-          type: string
-          example: "North Eleonor"
-        mother_name:
-          type: string
-          example: "Otha Tromp"
-        father_name:
-          type: string
-          example: "Ebonie Feest"
-        municipal_registration:
-          type: string
-          example: "11794469"
-        city_registration:
-          type: string
-          example: "29704263"
-        member_attributes:
+  NewMemberProfile:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Laverne O'Connell Sr."
+      cell_phone:
+        type: string
+        example: "979-728-6895"
+      phone:
+        type: string
+        example: "586-007-7671 x634"
+      birth:
+        type: string
+        example: "2005-02-21"
+      cpf:
+        type: string
+        example: "10778423411"
+      rg:
+        type: string
+        example: "188126739"
+      gender:
+        type: string
+        example: "female"
+      marital_status:
+        type: string
+        example: "viúvo"
+      pis:
+        type: string
+        example: "14459521948"
+      expedition:
+        type: string
+        example: "North Eleonor"
+      mother_name:
+        type: string
+        example: "Otha Tromp"
+      father_name:
+        type: string
+        example: "Ebonie Feest"
+      municipal_registration:
+        type: string
+        example: "11794469"
+      city_registration:
+        type: string
+        example: "29704263"
+      member_attributes:
+        type: object
+        properties:
+          email:
+            type: string
+            example: "paul.okon@hwillsmsl-friesren.test"
+          password:
+            type: string
+            example: "123456"
+      academic_educationals_attributes:
+        type: array
+        items:
           type: object
           properties:
-            email:
+            degree:
               type: string
-              example: "paul.okon@willms-friesen.test"
-        academic_educationals_attributes:
-          type: array
-          items:
-            type: object
-            properties:
-              degree:
-                type: string
-                example: "Bachelor of Nursing"
-              course:
-                type: string
-                example: "Bachelor of Criminology"
-              number_register:
-                type: string
-                example: "17714943"
-              profile_member_id:
-                type: integer
-                example: 25
-        addresses_attributes:
+              example: "Bachelor of Nursing"
+            course:
+              type: string
+              example: "Bachelor of Criminology"
+            number_register:
+              type: string
+              example: "17714943"
+      address_attributes:
+        type: object
+        properties:
+          street:
+            type: string
+            example: "Kovacek Fields"
+          number:
+            type: integer
+            example: 77846
+          neighborhood:
+            type: string
+            example: "Summer Pointe"
+          city:
+            type: string
+            example: "West Normaborough"
+          uf:
+            type: string
+            example: "NC"
+          mailing:
+            type: string
+            example: "f"
+          email_mailing:
+            type: string
+            example: "bryant_crist@peowlowski.test"
+      bank_account_attributes:
+        type: object
+        properties:
+          account:
+            type: string
+            example: "2661460018"
+          agency:
+            type: string
+            example: "242641052"
+          bank:
+            type: string
+            example: "ALLIED BANK PHILIPPINES (UK) PLC"
+          account_type:
+            type: string
+            example: "435"
+          pix:
+            type: string
+            example: "95999207500"
+      dependents_attributes:
+        type: array
+        items:
           type: object
           properties:
-            street:
+            name:
               type: string
-              example: "Kovacek Fields"
-            number:
-              type: integer
-              example: 77846
-            neighborhood:
+              example: "Michel Stokes"
+            birth:
               type: string
-              example: "Summer Pointe"
-            city:
-              type: string
-              example: "West Normaborough"
-            uf:
-              type: string
-              example: "NC"
-            mailing:
-              type: string
-              example: "f"
-            email_mailing:
-              type: string
-              example: "bryant_crist@powlowski.test"
-            profile_member_id:
-              type: integer
-              example: 25
-        bank_accounts_attributes:
+              example: "2021-01-20"
+  MemberBadRequestResponse:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
           type: object
           properties:
-            account:
-              type: string
-              example: "2661460018"
-            agency:
-              type: string
-              example: "242641052"
-            bank:
-              type: string
-              example: "ALLIED BANK PHILIPPINES (UK) PLC"
-            account_type:
-              type: string
-              example: "435"
-            pix:
-              type: string
-              example: "95999207500"
-            profile_member_id:
+            code:
+              type: array
+              items:
+                type: string
+                example: "Member email has already been taken"
+  ProfileMemberUpdateRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Laverne O'Connell Sr."
+      cell_phone:
+        type: string
+        example: "979-728-6895"
+      phone:
+        type: string
+        example: "586-007-7671 x634"
+      birth:
+        type: string
+        example: "2005-02-21"
+      cpf:
+        type: string
+        example: "10778423411"
+      rg:
+        type: string
+        example: "188126739"
+      gender:
+        type: string
+        example: "female"
+      marital_status:
+        type: string
+        example: "viúvo"
+      pis:
+        type: string
+        example: "14459521948"
+      expedition:
+        type: string
+        example: "North Eleonor"
+      mother_name:
+        type: string
+        example: "Otha Tromp"
+      father_name:
+        type: string
+        example: "Ebonie Feest"
+      municipal_registration:
+        type: string
+        example: "11794469"
+      city_registration:
+        type: string
+        example: "29704263"
+      member_attributes:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          email:
+            type: string
+            example: "paul.okon@hwillsmsl-friesren.test"
+            readOnly: true
+          password:
+            type: string
+            example: "123456"
+      academic_educationals_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
               type: integer
-              example: 25
-        dependents_attributes:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                example: "Michel Stokes"
-              birth:
-                type: string
-                format: date
-                example: "2021-01-20"
-              profile_member_id:
-                type: integer
-                example: 25
+              example: 1
+            degree:
+              type: string
+              example: "Bachelor of Nursing"
+            course:
+              type: string
+              example: "Bachelor of Criminology"
+            number_register:
+              type: string
+              example: "17714943"
+      address_attributes:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          street:
+            type: string
+            example: "Kovacek Fields"
+          number:
+            type: integer
+            example: 77846
+          neighborhood:
+            type: string
+            example: "Summer Pointe"
+          city:
+            type: string
+            example: "West Normaborough"
+          uf:
+            type: string
+            example: "NC"
+          mailing:
+            type: string
+            example: "f"
+          email_mailing:
+            type: string
+            example: "bryant_crist@peowlowski.test"
+      bank_account_attributes:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          account:
+            type: string
+            example: "2661460018"
+          agency:
+            type: string
+            example: "242641052"
+          bank:
+            type: string
+            example: "ALLIED BANK PHILIPPINES (UK) PLC"
+          account_type:
+            type: string
+            example: "435"
+          pix:
+            type: string
+            example: "95999207500"
+      dependents_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "Michel Stokes"
+            birth:
+              type: string
+              example: "2021-01-20"
 
+
+  UnauthorizedResponse:
+    type: object
+    properties:
+      error:
+        type: string
+        example: "Não autorizado. Token de acesso inválido ou expirado."
   NotFoundResponse:
     type: object
     properties:
       error:
         type: string
         example: "Não encontrado."
+  BadRequestResponse:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            code:
+              type: array
+              items:
+                type: string
+                example: "Requisição inválida, verifique a documentação e tente novamente."
 
 securityDefinitions:
     BearerAuth:
