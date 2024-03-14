@@ -27,7 +27,7 @@ paths:
       parameters:
         - in: body
           name: admin
-          description: Credenciais do usuário para login.
+          description: Credenciais do administrador para login.
           required: true
           schema:
             $ref: '#/definitions/LoginRequest'
@@ -112,8 +112,12 @@ paths:
       tags:
         - 'Cooperado'
       description: Retorna as informações do perfil de um membro com base no ID fornecido.
+      security:
+        - BearerAuth: []
       produces:
         - application/json
+      security:
+        - BearerAuth: []
       parameters:
         - name: page
           in: query
@@ -139,6 +143,8 @@ paths:
         - application/json
       produces:
         - application/json
+      security:
+        - BearerAuth: []
       parameters:
         - in: body
           name: body
@@ -163,6 +169,8 @@ paths:
       description: Retorna as informações do perfil de um cooperado com base no ID fornecido.
       produces:
         - application/json
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -192,6 +200,8 @@ paths:
         - application/json
       produces:
         - application/json
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -227,10 +237,10 @@ definitions:
         properties:
           email:
             type: string
-            example: "admin@admin.com"
+            example: "admin@coopaer.com"
           password:
             type: string
-            example: "123456"
+            example: "12345678"
   LoginResponse:
     type: object
     properties:
@@ -278,10 +288,10 @@ definitions:
         properties:
           email:
             type: string
-            example: "member@member.com"
+            example: "cooperado@coopaer.com"
           password:
             type: string
-            example: "123456"
+            example: "12345678"
 
   LogoutSuccessResponse:
     type: object
@@ -639,7 +649,7 @@ definitions:
               type: array
               items:
                 type: string
-                example: "Member email has already been taken"
+                example: "Cooperado email has already been taken"
   ProfileMemberUpdateRequest:
     type: object
     properties:
