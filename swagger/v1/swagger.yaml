@@ -140,12 +140,17 @@ paths:
         - 'Cooperado'
       description: Cria um novo perfil de membro com base nos dados fornecidos.
       consumes:
-        - application/json
+        - multipart/form-data
       produces:
         - application/json
       security:
         - BearerAuth: []
       parameters:
+        - in: formData
+          name: file_rg
+          description: Cópia do RG.
+          required: true
+          type: file
         - in: body
           name: body
           description: Dados do novo perfil de membro a serem criados.
@@ -227,6 +232,66 @@ paths:
           description: Perfil do cooperado não encontrado.
           schema:
             $ref: '#/definitions/NotFoundResponse'
+
+  /api/v1/upload_member_document/{id}:
+    post:
+      summary: Cria um novo exame de imagem.
+      tags:
+        - 'Cooperado'
+      description: Cria um novo exame de imagem com base nas informações fornecidas.
+      security:
+        - BearerAuth: []
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ID do Cooperado.
+          required: true
+          type: integer
+        - in: formData
+          name: document
+          description: Imagem do exame. Certifique-se de enviar como form-data.
+          required: true
+          type: file
+        - name: name
+          in: formData
+          description: Nome do arquivo.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Sucesso ao enviar o documento.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Documento enviado com sucesso.
+        '400':
+          description: Erro de requisição inválida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Arquivo não enviado.
+        '404':
+          description: Membro não encontrado.
+        '500':
+          description: Erro interno no servidor.
 
 definitions:
   LoginRequest:
@@ -537,6 +602,10 @@ definitions:
       rg:
         type: string
         example: "188126739"
+      rg_file:
+        type: string
+        format: binary
+        description: "Upload do arquivo RG"
       gender:
         type: string
         example: "female"

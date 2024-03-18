@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :profile_members, except: %i[destroy]
+      post '/upload_member_document/:id', to: 'profile_members#upload_documents'
     end
   end
 end

@@ -3,7 +3,7 @@
 module Api
   module V1
     class ProfileMembersController < ApplicationController
-      before_action :set_profile_member, only: %i[show update]
+      before_action :set_profile_member, only: %i[show update upload_documents]
 
       def index
         profile_member = ProfileMemberService.retrieve_data(params)
@@ -49,6 +49,13 @@ module Api
         end
       end
 
+      def upload_documents
+        document_name = params[:name]
+        document_file = params[:document]
+
+        @profile_member.documents.attach(io: document_file, filename: document_name)
+      end
+
       private
 
       def set_profile_member
@@ -59,9 +66,9 @@ module Api
 
       def profile_member_params
         params
-          .require(:profile_member)
           .permit(:name, :cell_phone, :phone, :birth, :cpf, :rg, :gender, :marital_status, :pis, :expedition,
                   :mother_name, :father_name, :municipal_registration, :city_registration,
+                  documents: [],
                   academic_educationals_attributes: %i[id degree course number_register],
                   address_attributes: %i[id street number neighborhood city uf mailing email_mailing],
                   bank_account_attributes: %i[id account agency bank account_type pix],
