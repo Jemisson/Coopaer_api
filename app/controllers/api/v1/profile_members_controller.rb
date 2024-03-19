@@ -73,12 +73,12 @@ module Api
       def profile_member_params
         params
           .permit(:name, :cell_phone, :phone, :birth, :cpf, :rg, :gender, :marital_status, :pis, :expedition,
-                  :mother_name, :father_name, :municipal_registration, :city_registration,
+                  :mother_name, :father_name, :municipal_registration, :city_registration, :cnd,
                   documents: [],
                   academic_educationals_attributes: %i[id degree course number_register],
                   address_attributes: %i[id street number neighborhood city uf mailing email_mailing],
                   bank_account_attributes: %i[id account agency bank account_type pix],
-                  dependents_attributes: %i[id name birth],
+                  dependents_attributes: %i[id name birth degree],
                   member_attributes: %i[id email password])
       end
     end

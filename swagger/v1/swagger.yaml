@@ -127,6 +127,11 @@ paths:
           required: false
           type: integer
           default: 1
+        - name: nm
+          in: query
+          description: Filtro para busca por nome do cooperado.
+          required: false
+          type: string
       responses:
         200:
           description: Perfil do membro recuperado com sucesso.
@@ -478,6 +483,9 @@ definitions:
                 city_registration:
                   type: string
                   example: "29704263"
+                cnd:
+                  type: string
+                  example: "454263"
                 member:
                   type: object
                   properties:
@@ -599,6 +607,9 @@ definitions:
                       birth:
                         type: string
                         example: "2021-01-20"
+                      degree:
+                        type: string
+                        example: "Filho"
                       profile_member_id:
                         type: integer
                         example: 25
@@ -672,6 +683,9 @@ definitions:
       city_registration:
         type: string
         example: "29704263"
+      cnd:
+        type: string
+        example: "04263"
       member_attributes:
         type: object
         properties:
@@ -748,6 +762,9 @@ definitions:
             birth:
               type: string
               example: "2021-01-20"
+            degree:
+              type: string
+              example: "Filho"
   MemberBadRequestResponse:
     type: object
     properties:
@@ -806,6 +823,9 @@ definitions:
       city_registration:
         type: string
         example: "29704263"
+      cnd:
+        type: string
+        example: "24263"
       member_attributes:
         type: object
         properties:
@@ -898,6 +918,9 @@ definitions:
             birth:
               type: string
               example: "2021-01-20"
+            degree:
+              type: string
+              example: "Filho"
 
   UnauthorizedResponse:
     type: object
