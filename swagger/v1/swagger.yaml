@@ -477,9 +477,6 @@ definitions:
                 father_name:
                   type: string
                   example: "Ebonie Feest"
-                municipal_registration:
-                  type: string
-                  example: "11794469"
                 city_registration:
                   type: string
                   example: "29704263"
@@ -677,9 +674,6 @@ definitions:
       father_name:
         type: string
         example: "Ebonie Feest"
-      municipal_registration:
-        type: string
-        example: "11794469"
       city_registration:
         type: string
         example: "29704263"
@@ -817,9 +811,6 @@ definitions:
       father_name:
         type: string
         example: "Ebonie Feest"
-      municipal_registration:
-        type: string
-        example: "11794469"
       city_registration:
         type: string
         example: "29704263"
