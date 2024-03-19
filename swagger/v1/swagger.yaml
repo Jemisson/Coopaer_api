@@ -292,6 +292,8 @@ paths:
           description: Membro não encontrado.
         '500':
           description: Erro interno no servidor.
+  /api/v1/member_documents/{:document_id}:
+    
 
 definitions:
   LoginRequest:
@@ -856,7 +858,6 @@ definitions:
             birth:
               type: string
               example: "2021-01-20"
-
 
   UnauthorizedResponse:
     type: object

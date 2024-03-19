@@ -22,6 +22,7 @@ class ProfileMember < ApplicationRecord
 
     documents.map do |document|
       {
+        id: document.id,
         url: Rails.application.routes.url_helpers.url_for(document),
         filename: document.filename
       }

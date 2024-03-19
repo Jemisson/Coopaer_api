@@ -3,7 +3,7 @@
 module Api
   module V1
     class ProfileMembersController < ApplicationController
-      before_action :set_profile_member, only: %i[show update upload_documents]
+      before_action :set_profile_member, only: %i[show update upload_documents destroy_document]
 
       def index
         profile_member = ProfileMemberService.retrieve_data(params)
@@ -54,6 +54,12 @@ module Api
         document_file = params[:document]
 
         @profile_member.documents.attach(io: document_file, filename: document_name)
+      end
+
+      def destroy_document
+        @document = @profile_member.documents.find(params[:document_id])
+        @document.purge
+        render json: { message: 'Documento excluído com sucesso' }, status: :ok
       end
 
       private
