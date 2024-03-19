@@ -12,6 +12,8 @@ tags:
     description: 'Registro, login e logout'
   - name: 'Cooperado'
     description: 'Dados dos cooperados'
+  - name: 'Documentos de Cooperados'
+    description: 'Dados para envio de documentos pessoais dos cooperados'
 
 paths:
   /admin/login:
@@ -237,7 +239,7 @@ paths:
     post:
       summary: Cria um novo exame de imagem.
       tags:
-        - 'Cooperado'
+        - 'Documentos de Cooperados'
       description: Cria um novo exame de imagem com base nas informações fornecidas.
       security:
         - BearerAuth: []
@@ -292,8 +294,46 @@ paths:
           description: Membro não encontrado.
         '500':
           description: Erro interno no servidor.
-  /api/v1/member_documents/{:document_id}:
-    
+  /api/v1/member_documents/{document_id}:
+    delete:
+      summary: Excluir documento de um profile_member
+      description: Este endpoint permite excluir um documento específico que pertence a um profile_member.
+      tags:
+        - 'Documentos de Cooperados'
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          required: true
+          description: ID do profile_member proprietário do documento
+          type: integer
+        - in: path
+          name: document_id
+          required: true
+          description: ID do documento a ser excluído
+          type: integer
+      responses:
+        '200':
+          description: Documento excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Documento excluído com sucesso
+        '404':
+          description: Profile_member ou documento não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Profile_member não encontrado
 
 definitions:
   LoginRequest:
