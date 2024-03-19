@@ -147,17 +147,12 @@ paths:
         - 'Cooperado'
       description: Cria um novo perfil de membro com base nos dados fornecidos.
       consumes:
-        - multipart/form-data
+        - application/json
       produces:
         - application/json
       security:
         - BearerAuth: []
       parameters:
-        - in: formData
-          name: file_rg
-          description: Cópia do RG.
-          required: true
-          type: file
         - in: body
           name: body
           description: Dados do novo perfil de membro a serem criados.
@@ -687,6 +682,9 @@ definitions:
             type: string
             example: "paul.okon@hwillsmsl-friesren.test"
           password:
+            type: string
+            example: "123456"
+          jti:
             type: string
             example: "123456"
       academic_educationals_attributes:
