@@ -12,6 +12,8 @@ tags:
     description: 'Registro, login e logout'
   - name: 'Cooperado'
     description: 'Dados dos cooperados'
+  - name: 'Documentos de Cooperados'
+    description: 'Dados para envio de documentos pessoais dos cooperados'
 
 paths:
   /admin/login:
@@ -125,6 +127,11 @@ paths:
           required: false
           type: integer
           default: 1
+        - name: nm
+          in: query
+          description: Filtro para busca por nome do cooperado.
+          required: false
+          type: string
       responses:
         200:
           description: Perfil do membro recuperado com sucesso.
@@ -140,12 +147,17 @@ paths:
         - 'Cooperado'
       description: Cria um novo perfil de membro com base nos dados fornecidos.
       consumes:
-        - application/json
+        - multipart/form-data
       produces:
         - application/json
       security:
         - BearerAuth: []
       parameters:
+        - in: formData
+          name: file_rg
+          description: Cópia do RG.
+          required: true
+          type: file
         - in: body
           name: body
           description: Dados do novo perfil de membro a serem criados.
@@ -228,6 +240,106 @@ paths:
           schema:
             $ref: '#/definitions/NotFoundResponse'
 
+  /api/v1/upload_member_document/{id}:
+    post:
+      summary: Cria um novo exame de imagem.
+      tags:
+        - 'Documentos de Cooperados'
+      description: Cria um novo exame de imagem com base nas informações fornecidas.
+      security:
+        - BearerAuth: []
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ID do Cooperado.
+          required: true
+          type: integer
+        - in: formData
+          name: document
+          description: Imagem do exame. Certifique-se de enviar como form-data.
+          required: true
+          type: file
+        - name: name
+          in: formData
+          description: Nome do arquivo.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Sucesso ao enviar o documento.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Documento enviado com sucesso.
+        '400':
+          description: Erro de requisição inválida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Arquivo não enviado.
+        '404':
+          description: Membro não encontrado.
+        '500':
+          description: Erro interno no servidor.
+  /api/v1/member_documents/{document_id}:
+    delete:
+      summary: Excluir documento de um profile_member
+      description: Este endpoint permite excluir um documento específico que pertence a um profile_member.
+      tags:
+        - 'Documentos de Cooperados'
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          required: true
+          description: ID do profile_member proprietário do documento
+          type: integer
+        - in: path
+          name: document_id
+          required: true
+          description: ID do documento a ser excluído
+          type: integer
+      responses:
+        '200':
+          description: Documento excluído com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Documento excluído com sucesso
+        '404':
+          description: Profile_member ou documento não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Profile_member não encontrado
+
 definitions:
   LoginRequest:
     type: object
@@ -237,7 +349,7 @@ definitions:
         properties:
           email:
             type: string
-            example: "admin@coopaer.com"
+            example: "admin@coopaer.com.br"
           password:
             type: string
             example: "12345678"
@@ -288,7 +400,7 @@ definitions:
         properties:
           email:
             type: string
-            example: "cooperado@coopaer.com"
+            example: "cooperado@coopaer.com.br"
           password:
             type: string
             example: "12345678"
@@ -365,12 +477,12 @@ definitions:
                 father_name:
                   type: string
                   example: "Ebonie Feest"
-                municipal_registration:
-                  type: string
-                  example: "11794469"
                 city_registration:
                   type: string
                   example: "29704263"
+                cnd:
+                  type: string
+                  example: "454263"
                 member:
                   type: object
                   properties:
@@ -492,6 +604,9 @@ definitions:
                       birth:
                         type: string
                         example: "2021-01-20"
+                      degree:
+                        type: string
+                        example: "Filho"
                       profile_member_id:
                         type: integer
                         example: 25
@@ -537,6 +652,10 @@ definitions:
       rg:
         type: string
         example: "188126739"
+      rg_file:
+        type: string
+        format: binary
+        description: "Upload do arquivo RG"
       gender:
         type: string
         example: "female"
@@ -555,12 +674,12 @@ definitions:
       father_name:
         type: string
         example: "Ebonie Feest"
-      municipal_registration:
-        type: string
-        example: "11794469"
       city_registration:
         type: string
         example: "29704263"
+      cnd:
+        type: string
+        example: "04263"
       member_attributes:
         type: object
         properties:
@@ -637,6 +756,9 @@ definitions:
             birth:
               type: string
               example: "2021-01-20"
+            degree:
+              type: string
+              example: "Filho"
   MemberBadRequestResponse:
     type: object
     properties:
@@ -689,12 +811,12 @@ definitions:
       father_name:
         type: string
         example: "Ebonie Feest"
-      municipal_registration:
-        type: string
-        example: "11794469"
       city_registration:
         type: string
         example: "29704263"
+      cnd:
+        type: string
+        example: "24263"
       member_attributes:
         type: object
         properties:
@@ -787,7 +909,9 @@ definitions:
             birth:
               type: string
               example: "2021-01-20"
-
+            degree:
+              type: string
+              example: "Filho"
 
   UnauthorizedResponse:
     type: object

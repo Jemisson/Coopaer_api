@@ -12,7 +12,6 @@ FactoryBot.define do
     expedition { "MyString" }
     mother_name { "MyString" }
     father_name { "MyString" }
-    municipal_registration { "MyString" }
     city_registration { "MyString" }
   end
 end

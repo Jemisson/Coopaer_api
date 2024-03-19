@@ -1,6 +1,6 @@
 require "active_support/core_ext/integer/time"
 Rails.application.routes.default_url_options = {
-  host: 'https://api.coopaer.com.br/'
+  host: 'https://api_staging.coopaer.com.br/'
 }
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
