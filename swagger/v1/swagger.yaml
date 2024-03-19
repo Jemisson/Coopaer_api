@@ -344,7 +344,7 @@ definitions:
         properties:
           email:
             type: string
-            example: "admin@coopaer.com"
+            example: "admin@coopaer.com.br"
           password:
             type: string
             example: "12345678"
@@ -395,7 +395,7 @@ definitions:
         properties:
           email:
             type: string
-            example: "cooperado@coopaer.com"
+            example: "cooperado@coopaer.com.br"
           password:
             type: string
             example: "12345678"
