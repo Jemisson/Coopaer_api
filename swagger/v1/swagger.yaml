@@ -337,6 +337,30 @@ paths:
                     type: string
                     example: Profile_member não encontrado
 
+  /api/v1/senar_reports:
+    get:
+      summary: Lista todos os relatórios Senar.
+      tags:
+        - 'Documentos de Cooperados'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número da página a ser recuperada.
+          required: false
+          type: integer
+          default: 1
+      responses:
+        '200':
+          description: Lista de relatórios Senar recuperada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/SenarReport'
+
   /api/v1/report_uploads/create:
     post:
       summary: Carrega um relatório no sistema.
@@ -938,6 +962,42 @@ definitions:
             degree:
               type: string
               example: "Filho"
+
+  SenarReport:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID do relatório Senar.
+        profile_member_id:
+          type: integer
+          format: int64
+          description: ID do membro do perfil associado ao relatório Senar.
+        name:
+          type: string
+          description: Nome do membro do perfil associado ao relatório Senar.
+        event:
+          type: string
+          description: Evento do relatório Senar.
+        event_init_date:
+          type: string
+          description: Data de início do evento do relatório Senar.
+        event_finish_date:
+          type: string
+          description: Data de término do evento do relatório Senar.
+        amount:
+          type: number
+          format: float
+          description: Valor do relatório Senar.
+        created_at:
+          type: string
+          format: date-time
+          description: Data de criação do relatório Senar.
+        updated_at:
+          type: string
+          format: date-time
+          description: Data de atualização do relatório Senar.
 
   UnauthorizedResponse:
     type: object

@@ -2,6 +2,14 @@
 
 class SenarReportService
   class << self
+    def retrieve_data(params)
+      SenarReport
+        .includes(:profile_member)
+        .order(created_at: :desc)
+        .page(params[:page] || 1)
+        .per(params[:per_page] || 15)
+    end
+
     def save_data(data)
       parsed_data = JSON.parse(data)
 
