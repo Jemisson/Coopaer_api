@@ -22,7 +22,6 @@ namespace :setup do
         expedition: Faker::Address.city,
         mother_name: Faker::Name.name,
         father_name: Faker::Name.name,
-        municipal_registration: Faker::Number.number(digits: 8),
         city_registration: Faker::Number.number(digits: 8)
       )
 

@@ -14,6 +14,8 @@ tags:
     description: 'Dados dos cooperados'
   - name: 'Documentos de Cooperados'
     description: 'Dados para envio de documentos pessoais dos cooperados'
+  - name: 'Envio de Relatórios'
+    description: 'Forma de envio de relatório para cadastro de eventos aos cooperados'
 
 paths:
   /admin/login:
@@ -255,7 +257,7 @@ paths:
           type: integer
         - in: formData
           name: document
-          description: Imagem do exame. Certifique-se de enviar como form-data.
+          description: Documento. Certifique-se de enviar como form-data.
           required: true
           type: file
         - name: name
@@ -334,6 +336,56 @@ paths:
                   error:
                     type: string
                     example: Profile_member não encontrado
+
+  /api/v1/senar_reports:
+    get:
+      summary: Lista todos os relatórios Senar.
+      tags:
+        - 'Documentos de Cooperados'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número da página a ser recuperada.
+          required: false
+          type: integer
+          default: 1
+      responses:
+        '200':
+          description: Lista de relatórios Senar recuperada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/SenarReport'
+
+  /api/v1/report_uploads/create:
+    post:
+      summary: Carrega um relatório no sistema.
+      tags:
+        - 'Envio de Relatórios'
+      description: Cria os eventos dos usuários com os dados fornecidos pelo relatórios do SENAR
+      security:
+        - BearerAuth: []
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file
+          description: Documento. Certifique-se de enviar como form-data.
+          required: true
+          type: file
+      responses:
+        '200':
+          description: Arquivo enviado com sucesso.
+        '422':
+          description: Arquivo não fornecido ou inválido.
+        '500':
+          description: Erro interno do servidor.
 
 definitions:
   LoginRequest:
@@ -910,6 +962,42 @@ definitions:
             degree:
               type: string
               example: "Filho"
+
+  SenarReport:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID do relatório Senar.
+        profile_member_id:
+          type: integer
+          format: int64
+          description: ID do membro do perfil associado ao relatório Senar.
+        name:
+          type: string
+          description: Nome do membro do perfil associado ao relatório Senar.
+        event:
+          type: string
+          description: Evento do relatório Senar.
+        event_init_date:
+          type: string
+          description: Data de início do evento do relatório Senar.
+        event_finish_date:
+          type: string
+          description: Data de término do evento do relatório Senar.
+        amount:
+          type: number
+          format: float
+          description: Valor do relatório Senar.
+        created_at:
+          type: string
+          format: date-time
+          description: Data de criação do relatório Senar.
+        updated_at:
+          type: string
+          format: date-time
+          description: Data de atualização do relatório Senar.
 
   UnauthorizedResponse:
     type: object

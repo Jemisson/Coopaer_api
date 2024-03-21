@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_19_203319) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_21_022440) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -138,6 +138,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_19_203319) do
     t.index ["member_id"], name: "index_profile_members_on_member_id"
   end
 
+  create_table "senar_reports", force: :cascade do |t|
+    t.bigint "profile_member_id", null: false
+    t.string "name"
+    t.string "event"
+    t.string "event_init_date"
+    t.string "event_finish_date"
+    t.decimal "amount"
+    t.string "invoice"
+    t.string "receipt"
+    t.string "status_payment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_member_id"], name: "index_senar_reports_on_profile_member_id"
+  end
+
   add_foreign_key "academic_educationals", "profile_members"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
@@ -145,4 +160,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_19_203319) do
   add_foreign_key "bank_accounts", "profile_members"
   add_foreign_key "dependents", "profile_members"
   add_foreign_key "profile_members", "members"
+  add_foreign_key "senar_reports", "profile_members"
 end

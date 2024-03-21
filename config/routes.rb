@@ -27,8 +27,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :profile_members, except: %i[destroy]
+      resources :senar_reports, only: [:index]
       post '/upload_member_document/:id', to: 'profile_members#upload_documents'
       delete '/member_documents/:document_id', to: 'profile_members#destroy_document'
+      post '/report_uploads/create', to: 'report_uploads#create'
     end
   end
 end
