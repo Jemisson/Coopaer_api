@@ -8,6 +8,7 @@ class ProfileMember < ApplicationRecord
 
   has_many :dependents
   has_many :academic_educationals
+  has_many :senar_reports
 
   has_many_attached :documents
 

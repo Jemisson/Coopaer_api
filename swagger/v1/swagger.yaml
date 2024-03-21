@@ -14,6 +14,8 @@ tags:
     description: 'Dados dos cooperados'
   - name: 'Documentos de Cooperados'
     description: 'Dados para envio de documentos pessoais dos cooperados'
+  - name: 'Envio de Relatórios'
+    description: 'Forma de envio de relatório para cadastro de eventos aos cooperados'
 
 paths:
   /admin/login:
@@ -255,7 +257,7 @@ paths:
           type: integer
         - in: formData
           name: document
-          description: Imagem do exame. Certifique-se de enviar como form-data.
+          description: Documento. Certifique-se de enviar como form-data.
           required: true
           type: file
         - name: name
@@ -334,6 +336,32 @@ paths:
                   error:
                     type: string
                     example: Profile_member não encontrado
+
+  /api/v1/report_uploads/create:
+    post:
+      summary: Carrega um relatório no sistema.
+      tags:
+        - 'Envio de Relatórios'
+      description: Cria os eventos dos usuários com os dados fornecidos pelo relatórios do SENAR
+      security:
+        - BearerAuth: []
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file
+          description: Documento. Certifique-se de enviar como form-data.
+          required: true
+          type: file
+      responses:
+        '200':
+          description: Arquivo enviado com sucesso.
+        '422':
+          description: Arquivo não fornecido ou inválido.
+        '500':
+          description: Erro interno do servidor.
 
 definitions:
   LoginRequest:
