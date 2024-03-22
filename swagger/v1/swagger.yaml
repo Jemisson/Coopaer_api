@@ -642,6 +642,21 @@ definitions:
                       updated_at:
                         type: string
                         example: "2024-03-08T04:56:56.343Z"
+                document_urls:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      url:
+                        type: string
+                        format: uri
+                        example: "https://api_staging.coopaer.com.br//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9b68b564d2a57638c4ab6d71b14a7927ef844c45/RG"
+                      filename:
+                        type: string
+                        example: "RG"
       meta:
         type: object
         properties:
