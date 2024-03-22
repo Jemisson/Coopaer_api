@@ -5,6 +5,7 @@ class SenarReportService
     def retrieve_data(params)
       SenarReport
         .includes(:profile_member)
+        .where(profile_member_id: params[:id])
         .order(created_at: :desc)
         .page(params[:page] || 1)
         .per(params[:per_page] || 15)

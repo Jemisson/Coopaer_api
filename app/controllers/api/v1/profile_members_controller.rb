@@ -50,10 +50,16 @@ module Api
       end
 
       def upload_documents
-        document_name = params[:name]
-        document_file = params[:document]
-
-        @profile_member.documents.attach(io: document_file, filename: document_name)
+        if params[:name].present? && params[:document].present?
+          begin
+            @profile_member.documents.attach(io: params[:document], filename: params[:name])
+            render json: { message: 'Documento salvo com sucesso.' }, status: :ok
+          rescue ActiveStorage::IntegrityError => e
+            render json: { error: "Erro ao salvar o documento: #{e.message}" }, status: :unprocessable_entity
+          end
+        else
+          render json: { error: 'Nome do documento ou arquivo ausentes.' }, status: :unprocessable_entity
+        end
       end
 
       def destroy_document
@@ -76,7 +82,7 @@ module Api
                   :mother_name, :father_name, :city_registration, :cnd,
                   documents: [],
                   academic_educationals_attributes: %i[id degree course number_register],
-                  address_attributes: %i[id street number neighborhood city uf mailing email_mailing],
+                  address_attributes: %i[id street number neighborhood cep city uf mailing email_mailing],
                   bank_account_attributes: %i[id account agency bank account_type pix],
                   dependents_attributes: %i[id name birth degree],
                   member_attributes: %i[id email password])
