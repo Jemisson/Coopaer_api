@@ -8,7 +8,9 @@ servers:
   - url: http://localhost:3000/api/v1
 
 tags:
-  - name: 'Acesso'
+  - name: 'Acesso área Administrativa'
+    description: 'Registro, login e logout'
+  - name: 'Acesso área do Cooperado'
     description: 'Registro, login e logout'
   - name: 'Cooperado'
     description: 'Dados dos cooperados'
@@ -22,7 +24,7 @@ paths:
     post:
       summary: Realiza o login do usuário.
       tags:
-        - 'Acesso'
+        - 'Acesso área Administrativa'
       description: Autentica o usuário com base no e-mail e senha fornecidos. O token da sessão de usuário (Authorization) é informado no response headers da requisição.
       consumes:
         - application/json
@@ -48,7 +50,7 @@ paths:
     delete:
       summary: Realiza o logout do usuário.
       tags:
-        - 'Acesso'
+        - 'Acesso área Administrativa'
       description: Encerra a sessão do usuário.
       produces:
         - application/json
@@ -68,7 +70,7 @@ paths:
     post:
       summary: Realiza o login do Cooperado.
       tags:
-        - 'Acesso'
+        - 'Acesso área do Cooperado'
       description: Autentica o cooperado com base no e-mail e senha fornecidos. O token da sessão de usuário (Authorization) é informado no response headers da requisição.
       consumes:
         - application/json
@@ -94,7 +96,7 @@ paths:
     delete:
       summary: Realiza o logout do cooperado.
       tags:
-        - 'Acesso'
+        - 'Acesso área do Cooperado'
       description: Encerra a sessão do cooperado.
       produces:
         - application/json
