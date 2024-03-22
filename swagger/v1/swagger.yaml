@@ -591,6 +591,9 @@ definitions:
                     neighborhood:
                       type: string
                       example: "Summer Pointe"
+                    cep:
+                      type: string
+                      example: "79750-000"
                     city:
                       type: string
                       example: "West Normaborough"
@@ -770,6 +773,9 @@ definitions:
           neighborhood:
             type: string
             example: "Summer Pointe"
+          cep:
+            type: string
+            example: "79750-000"
           city:
             type: string
             example: "West Normaborough"
@@ -917,6 +923,9 @@ definitions:
           neighborhood:
             type: string
             example: "Summer Pointe"
+          cep:
+            type: string
+            example: "79750-000"
           city:
             type: string
             example: "West Normaborough"

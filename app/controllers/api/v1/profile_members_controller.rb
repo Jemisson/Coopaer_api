@@ -76,7 +76,7 @@ module Api
                   :mother_name, :father_name, :city_registration, :cnd,
                   documents: [],
                   academic_educationals_attributes: %i[id degree course number_register],
-                  address_attributes: %i[id street number neighborhood city uf mailing email_mailing],
+                  address_attributes: %i[id street number neighborhood cep city uf mailing email_mailing],
                   bank_account_attributes: %i[id account agency bank account_type pix],
                   dependents_attributes: %i[id name birth degree],
                   member_attributes: %i[id email password])
