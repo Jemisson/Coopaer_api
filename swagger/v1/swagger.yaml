@@ -345,6 +345,11 @@ paths:
       security:
         - BearerAuth: []
       parameters:
+        - name: id
+          in: query
+          description: ID do cooperado.
+          required: true
+          type: integer
         - name: page
           in: query
           description: Número da página a ser recuperada.
