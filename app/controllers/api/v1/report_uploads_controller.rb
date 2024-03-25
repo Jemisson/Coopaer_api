@@ -15,12 +15,12 @@ module Api
 
           if uploaded_file
             file_path = Rails.root.join('storage', 'temp_reports', new_file_name).to_s
-            system("rails pdf:extract['#{file_path}'] &")
+            system("RAILS_ENV=staging bundle exec rails pdf:extract['#{file_path}'] &")
           end
 
-          render json: { message: "Arquivo enviado com sucesso." }
+          render json: { message: 'Arquivo enviado com sucesso.' }
         else
-          render json: { error: "Nenhum arquivo enviado." }, status: :unprocessable_entity
+          render json: { error: 'Nenhum arquivo enviado.' }, status: :unprocessable_entity
         end
       end
 
