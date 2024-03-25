@@ -1,0 +1,1084 @@
+swagger: '2.0'
+
+info:
+  version: 1.0.0
+  title: Coopaer API
+
+servers:
+  - url: http://localhost:3000/api/v1
+
+tags:
+  - name: 'Acesso área Administrativa'
+    description: 'Registro, login e logout'
+  - name: 'Acesso área do Cooperado'
+    description: 'Registro, login e logout'
+  - name: 'Cooperado'
+    description: 'Dados dos cooperados'
+  - name: 'Documentos de Cooperados'
+    description: 'Dados para envio de documentos pessoais dos cooperados'
+  - name: 'Envio de Relatórios'
+    description: 'Forma de envio de relatório para cadastro de eventos aos cooperados'
+
+paths:
+  /admin/login:
+    post:
+      summary: Realiza o login do usuário.
+      tags:
+        - 'Acesso área Administrativa'
+      description: Autentica o usuário com base no e-mail e senha fornecidos. O token da sessão de usuário (Authorization) é informado no response headers da requisição.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: admin
+          description: Credenciais do administrador para login.
+          required: true
+          schema:
+            $ref: '#/definitions/LoginRequest'
+      responses:
+        200:
+          description: Usuário autenticado com sucesso.
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        401:
+          description: E-mail ou senha inválidos.
+          schema:
+            $ref: '#/definitions/InvalidCredentialsResponse'
+  /admin/logout:
+    delete:
+      summary: Realiza o logout do usuário.
+      tags:
+        - 'Acesso área Administrativa'
+      description: Encerra a sessão do usuário.
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Usuário saiu com sucesso.
+          schema:
+            $ref: '#/definitions/LogoutSuccessResponse'
+        401:
+          description: Não foi possível encontrar uma autenticação.
+          schema:
+            $ref: '#/definitions/LogoutErrorResponse'
+
+  /member/login:
+    post:
+      summary: Realiza o login do Cooperado.
+      tags:
+        - 'Acesso área do Cooperado'
+      description: Autentica o cooperado com base no e-mail e senha fornecidos. O token da sessão de usuário (Authorization) é informado no response headers da requisição.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: member
+          description: Credenciais do cooperado para login.
+          required: true
+          schema:
+            $ref: '#/definitions/LoginMemberRequest'
+      responses:
+        200:
+          description: Cooperado autenticado com sucesso.
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        401:
+          description: E-mail ou senha inválidos.
+          schema:
+            $ref: '#/definitions/InvalidCredentialsResponse'
+  /member/logout:
+    delete:
+      summary: Realiza o logout do cooperado.
+      tags:
+        - 'Acesso área do Cooperado'
+      description: Encerra a sessão do cooperado.
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Cooperado saiu com sucesso.
+          schema:
+            $ref: '#/definitions/LogoutSuccessResponse'
+        401:
+          description: Não foi possível encontrar uma autenticação.
+          schema:
+            $ref: '#/definitions/LogoutErrorResponse'
+
+  /api/v1/profile_members:
+    get:
+      summary: Obtém o perfil de um membro específico.
+      tags:
+        - 'Cooperado'
+      description: Retorna as informações do perfil de um membro com base no ID fornecido.
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número da página a ser recuperada.
+          required: false
+          type: integer
+          default: 1
+        - name: nm
+          in: query
+          description: Filtro para busca por nome do cooperado.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Perfil do membro recuperado com sucesso.
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        404:
+          description: Perfil do membro não encontrado.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+    post:
+      summary: Cria um novo perfil de membro.
+      tags:
+        - 'Cooperado'
+      description: Cria um novo perfil de membro com base nos dados fornecidos.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: body
+          name: body
+          description: Dados do novo perfil de membro a serem criados.
+          required: true
+          schema:
+            $ref: '#/definitions/NewMemberProfile'
+      responses:
+        201:
+          description: Perfil do membro criado com sucesso.
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        400:
+          description: Erro de requisição inválida.
+          schema:
+            $ref: '#/definitions/MemberBadRequestResponse'
+  /api/v1/profile_members/{id}:
+    get:
+      summary: Obtém o perfil de um cooperado específico.
+      tags:
+        - 'Cooperado'
+      description: Retorna as informações do perfil de um cooperado com base no ID fornecido.
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID do cooperado a ser recuperado.
+          required: true
+          type: integer
+          example: 1
+      responses:
+        200:
+          description: Perfil do membro recuperado com sucesso.
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        401:
+          description: Não autorizado. Token de acesso inválido ou expirado.
+          schema:
+            $ref: '#/definitions/UnauthorizedResponse'
+        404:
+          description: Perfil do membro não encontrado.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+    put:
+      summary: Atualiza o perfil de um membro específico.
+      tags:
+        - 'Cooperado'
+      description: Atualiza as informações do perfil de um membro com base no ID fornecido.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID do cooperado a ser atualizado.
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Dados do cooperado a serem alterados.
+          required: true
+          schema:
+            $ref: '#/definitions/ProfileMemberUpdateRequest'
+      responses:
+        200:
+          description: Perfil do cooperado atualizado com sucesso.
+          schema:
+            $ref: '#/definitions/MemberProfileResponse'
+        400:
+          description: Requisição inválida. Verifique os parâmetros enviados.
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
+        404:
+          description: Perfil do cooperado não encontrado.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+
+  /api/v1/upload_member_document/{id}:
+    post:
+      summary: Cria um novo exame de imagem.
+      tags:
+        - 'Documentos de Cooperados'
+      description: Cria um novo exame de imagem com base nas informações fornecidas.
+      security:
+        - BearerAuth: []
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ID do Cooperado.
+          required: true
+          type: integer
+        - in: formData
+          name: document
+          description: Documento. Certifique-se de enviar como form-data.
+          required: true
+          type: file
+        - name: name
+          in: formData
+          description: Nome do arquivo.
+          required: true
+          type: string
+      responses:
+        200:
+          description: Documento salvo com sucesso.
+          schema:
+            $ref: '#/definitions/CreateDocumentResponse'
+        400:
+          description: Dados faltantes.
+          schema:
+            $ref: '#/definitions/MissingDocumentResponse'
+        404:
+          description: Dados faltantes.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+
+  /api/v1/member_documents/{document_id}:
+    delete:
+      summary: Excluir documento de um profile_member
+      description: Este endpoint permite excluir um documento específico que pertence a um profile_member.
+      tags:
+        - 'Documentos de Cooperados'
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: id
+          required: true
+          description: ID do profile_member proprietário do documento
+          type: integer
+        - in: path
+          name: document_id
+          required: true
+          description: ID do documento a ser excluído
+          type: integer
+      responses:
+        200:
+          description: Documento salvo com sucesso.
+          schema:
+            $ref: '#/definitions/DeleteDocumentResponse'
+        404:
+          description: Dados faltantes.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+
+  /api/v1/senar_reports:
+    get:
+      summary: Lista todos os relatórios Senar.
+      tags:
+        - 'Documentos de Cooperados'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          description: ID do cooperado.
+          required: true
+          type: integer
+        - name: page
+          in: query
+          description: Número da página a ser recuperada.
+          required: false
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Documento salvo com sucesso.
+          schema:
+            $ref: '#/definitions/ReportResponse'
+        404:
+          description: Dados faltantes.
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+
+  /api/v1/report_uploads/create:
+    post:
+      summary: Carrega um relatório no sistema.
+      tags:
+        - 'Envio de Relatórios'
+      description: Cria os eventos dos usuários com os dados fornecidos pelo relatórios do SENAR
+      security:
+        - BearerAuth: []
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file
+          description: Documento. Certifique-se de enviar como form-data.
+          required: true
+          type: file
+      responses:
+        200:
+          description: Documento salvo com sucesso.
+          schema:
+            $ref: '#/definitions/SenarReportResponse'
+
+definitions:
+  LoginRequest:
+    type: object
+    properties:
+      admin:
+        type: object
+        properties:
+          email:
+            type: string
+            example: "admin@coopaer.com.br"
+          password:
+            type: string
+            example: "12345678"
+  LoginResponse:
+    type: object
+    properties:
+      status:
+        type: object
+        properties:
+          code:
+            type: integer
+            example: 200
+          message:
+            type: string
+            example: "Autenticado com sucesso"
+          data:
+            type: object
+            properties:
+              admin:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  email:
+                    type: string
+                    example: "jemison321@gmail.com"
+                  name:
+                    type: string
+                    example: "Jemison"
+  InvalidCredentialsResponse:
+    type: object
+    properties:
+      status:
+        type: object
+        properties:
+          code:
+            type: integer
+            example: 401
+          message:
+            type: string
+            example: "Invalid Email or password"
+  LoginMemberRequest:
+    type: object
+    properties:
+      member:
+        type: object
+        properties:
+          email:
+            type: string
+            example: "cooperado@coopaer.com.br"
+          password:
+            type: string
+            example: "12345678"
+
+  LogoutSuccessResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 200
+      message:
+        type: string
+        example: "Saiu com sucesso"
+  LogoutErrorResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        example: 401
+      message:
+        type: string
+        example: "Não foi possível encontrar uma autenticação"
+
+  MemberProfileResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "25"
+            type:
+              type: string
+              example: "profile_member"
+            attributes:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Laverne O'Connell Sr."
+                cell_phone:
+                  type: string
+                  example: "979-728-6895"
+                phone:
+                  type: string
+                  example: "586-007-7671 x634"
+                birth:
+                  type: string
+                  example: "2005-02-21"
+                cpf:
+                  type: string
+                  example: "10778423411"
+                rg:
+                  type: string
+                  example: "188126739"
+                gender:
+                  type: string
+                  example: "female"
+                marital_status:
+                  type: string
+                  example: "viúvo"
+                pis:
+                  type: string
+                  example: "14459521948"
+                expedition:
+                  type: string
+                  example: "North Eleonor"
+                mother_name:
+                  type: string
+                  example: "Otha Tromp"
+                father_name:
+                  type: string
+                  example: "Ebonie Feest"
+                city_registration:
+                  type: string
+                  example: "29704263"
+                cnd:
+                  type: string
+                  example: "454263"
+                member:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 25
+                    email:
+                      type: string
+                      example: "paul.okon@willms-friesen.test"
+                    created_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.322Z"
+                    updated_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.322Z"
+                academic_educationals:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 49
+                      degree:
+                        type: string
+                        example: "Bachelor of Nursing"
+                      course:
+                        type: string
+                        example: "Bachelor of Criminology"
+                      number_register:
+                        type: string
+                        example: "17714943"
+                      profile_member_id:
+                        type: integer
+                        example: 25
+                      created_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.333Z"
+                      updated_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.333Z"
+                address:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 25
+                    street:
+                      type: string
+                      example: "Kovacek Fields"
+                    number:
+                      type: integer
+                      example: 77846
+                    neighborhood:
+                      type: string
+                      example: "Summer Pointe"
+                    cep:
+                      type: string
+                      example: "79750-000"
+                    city:
+                      type: string
+                      example: "West Normaborough"
+                    uf:
+                      type: string
+                      example: "NC"
+                    mailing:
+                      type: string
+                      example: "f"
+                    email_mailing:
+                      type: string
+                      example: "bryant_crist@powlowski.test"
+                    profile_member_id:
+                      type: integer
+                      example: 25
+                    created_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.338Z"
+                    updated_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.338Z"
+                bank_account:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 25
+                    account:
+                      type: string
+                      example: "2661460018"
+                    agency:
+                      type: string
+                      example: "242641052"
+                    bank:
+                      type: string
+                      example: "ALLIED BANK PHILIPPINES (UK) PLC"
+                    account_type:
+                      type: string
+                      example: "435"
+                    pix:
+                      type: string
+                      example: "95999207500"
+                    profile_member_id:
+                      type: integer
+                      example: 25
+                    created_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.341Z"
+                    updated_at:
+                      type: string
+                      example: "2024-03-08T04:56:56.341Z"
+                dependents:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 49
+                      name:
+                        type: string
+                        example: "Michel Stokes"
+                      birth:
+                        type: string
+                        example: "2021-01-20"
+                      degree:
+                        type: string
+                        example: "Filho"
+                      profile_member_id:
+                        type: integer
+                        example: 25
+                      created_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.343Z"
+                      updated_at:
+                        type: string
+                        example: "2024-03-08T04:56:56.343Z"
+                document_urls:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      url:
+                        type: string
+                        format: uri
+                        example: "https://api_staging.coopaer.com.br//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9b68b564d2a57638c4ab6d71b14a7927ef844c45/RG"
+                      filename:
+                        type: string
+                        example: "RG"
+      meta:
+        type: object
+        properties:
+          total_count:
+            type: integer
+            example: 25
+          total_pages:
+            type: integer
+            example: 3
+          current_page:
+            type: integer
+            example: 1
+          per_page:
+            type: integer
+            example: 10
+  NewMemberProfile:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Laverne O'Connell Sr."
+      cell_phone:
+        type: string
+        example: "979-728-6895"
+      phone:
+        type: string
+        example: "586-007-7671 x634"
+      birth:
+        type: string
+        example: "2005-02-21"
+      cpf:
+        type: string
+        example: "10778423411"
+      rg:
+        type: string
+        example: "188126739"
+      rg_file:
+        type: string
+        format: binary
+        description: "Upload do arquivo RG"
+      gender:
+        type: string
+        example: "female"
+      marital_status:
+        type: string
+        example: "viúvo"
+      pis:
+        type: string
+        example: "14459521948"
+      expedition:
+        type: string
+        example: "North Eleonor"
+      mother_name:
+        type: string
+        example: "Otha Tromp"
+      father_name:
+        type: string
+        example: "Ebonie Feest"
+      city_registration:
+        type: string
+        example: "29704263"
+      cnd:
+        type: string
+        example: "04263"
+      member_attributes:
+        type: object
+        properties:
+          email:
+            type: string
+            example: "paul.okon@hwillsmsl-friesren.test"
+          password:
+            type: string
+            example: "123456"
+          jti:
+            type: string
+            example: "123456"
+      academic_educationals_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            degree:
+              type: string
+              example: "Bachelor of Nursing"
+            course:
+              type: string
+              example: "Bachelor of Criminology"
+            number_register:
+              type: string
+              example: "17714943"
+      address_attributes:
+        type: object
+        properties:
+          street:
+            type: string
+            example: "Kovacek Fields"
+          number:
+            type: integer
+            example: 77846
+          neighborhood:
+            type: string
+            example: "Summer Pointe"
+          cep:
+            type: string
+            example: "79750-000"
+          city:
+            type: string
+            example: "West Normaborough"
+          uf:
+            type: string
+            example: "NC"
+          mailing:
+            type: string
+            example: "f"
+          email_mailing:
+            type: string
+            example: "bryant_crist@peowlowski.test"
+      bank_account_attributes:
+        type: object
+        properties:
+          account:
+            type: string
+            example: "2661460018"
+          agency:
+            type: string
+            example: "242641052"
+          bank:
+            type: string
+            example: "ALLIED BANK PHILIPPINES (UK) PLC"
+          account_type:
+            type: string
+            example: "435"
+          pix:
+            type: string
+            example: "95999207500"
+      dependents_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "Michel Stokes"
+            birth:
+              type: string
+              example: "2021-01-20"
+            degree:
+              type: string
+              example: "Filho"
+  MemberBadRequestResponse:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            code:
+              type: array
+              items:
+                type: string
+                example: "Cooperado email has already been taken"
+  ProfileMemberUpdateRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Laverne O'Connell Sr."
+      cell_phone:
+        type: string
+        example: "979-728-6895"
+      phone:
+        type: string
+        example: "586-007-7671 x634"
+      birth:
+        type: string
+        example: "2005-02-21"
+      cpf:
+        type: string
+        example: "10778423411"
+      rg:
+        type: string
+        example: "188126739"
+      gender:
+        type: string
+        example: "female"
+      marital_status:
+        type: string
+        example: "viúvo"
+      pis:
+        type: string
+        example: "14459521948"
+      expedition:
+        type: string
+        example: "North Eleonor"
+      mother_name:
+        type: string
+        example: "Otha Tromp"
+      father_name:
+        type: string
+        example: "Ebonie Feest"
+      city_registration:
+        type: string
+        example: "29704263"
+      cnd:
+        type: string
+        example: "24263"
+      member_attributes:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          email:
+            type: string
+            example: "paul.okon@hwillsmsl-friesren.test"
+            readOnly: true
+          password:
+            type: string
+            example: "123456"
+      academic_educationals_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            degree:
+              type: string
+              example: "Bachelor of Nursing"
+            course:
+              type: string
+              example: "Bachelor of Criminology"
+            number_register:
+              type: string
+              example: "17714943"
+      address_attributes:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          street:
+            type: string
+            example: "Kovacek Fields"
+          number:
+            type: integer
+            example: 77846
+          neighborhood:
+            type: string
+            example: "Summer Pointe"
+          cep:
+            type: string
+            example: "79750-000"
+          city:
+            type: string
+            example: "West Normaborough"
+          uf:
+            type: string
+            example: "NC"
+          mailing:
+            type: string
+            example: "f"
+          email_mailing:
+            type: string
+            example: "bryant_crist@peowlowski.test"
+      bank_account_attributes:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          account:
+            type: string
+            example: "2661460018"
+          agency:
+            type: string
+            example: "242641052"
+          bank:
+            type: string
+            example: "ALLIED BANK PHILIPPINES (UK) PLC"
+          account_type:
+            type: string
+            example: "435"
+          pix:
+            type: string
+            example: "95999207500"
+      dependents_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "Michel Stokes"
+            birth:
+              type: string
+              example: "2021-01-20"
+            degree:
+              type: string
+              example: "Filho"
+
+  CreateDocumentResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Documento salvo com sucesso.
+  DeleteDocumentResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Documento excluído com sucesso.
+  MissingDocumentResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Verifique o documento e tente novamente.
+
+  ReportResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "1"
+            type:
+              type: string
+              example: "senar_report"
+            attributes:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                profile_member_id:
+                  type: integer
+                  example: 26
+                name:
+                  type: string
+                  example: "João da Silva"
+                event:
+                  type: string
+                  example: "2023051956"
+                event_init_date:
+                  type: string
+                  example: "18/11/2023"
+                event_finish_date:
+                  type: string
+                  example: "18/11/2023"
+                amount:
+                  type: string
+                  example: "186.0"
+                invoice:
+                  type: string
+                  example: "123456"
+                receipt:
+                  type: string
+                  example: "789012"
+                created_at:
+                  type: string
+                  format: date-time
+                  example: "2024-03-21T04:19:30.899Z"
+      meta:
+        type: object
+        properties:
+          total_count:
+            type: integer
+            example: 10
+          total_pages:
+            type: integer
+            example: 1
+          current_page:
+            type: integer
+            example: 1
+          per_page:
+            type: integer
+            example: 15
+  SenarReportResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Arquivo enviado com sucesso.
+  UnauthorizedResponse:
+    type: object
+    properties:
+      error:
+        type: string
+        example: "Não autorizado. Token de acesso inválido ou expirado."
+  NotFoundResponse:
+    type: object
+    properties:
+      error:
+        type: string
+        example: "Não encontrado."
+  BadRequestResponse:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            code:
+              type: array
+              items:
+                type: string
+                example: "Requisição inválida, verifique a documentação e tente novamente."
+
+securityDefinitions:
+    BearerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
