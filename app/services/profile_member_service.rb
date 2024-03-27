@@ -10,6 +10,7 @@ class ProfileMemberService
 
       query
         .order(created_at: :desc)
+        .where(status: params[:stat] || 0)
         .page(params[:page] || 1)
         .per(params[:per_page] || 10)
     end
