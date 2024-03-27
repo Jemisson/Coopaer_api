@@ -79,7 +79,7 @@ module Api
       def profile_member_params
         params
           .permit(:name, :cell_phone, :phone, :birth, :cpf, :rg, :gender, :marital_status, :pis, :expedition,
-                  :mother_name, :father_name, :city_registration, :cnd,
+                  :mother_name, :father_name, :city_registration, :cnd, :status,
                   documents: [],
                   academic_educationals_attributes: %i[id degree course number_register],
                   address_attributes: %i[id street number neighborhood cep city uf mailing email_mailing],

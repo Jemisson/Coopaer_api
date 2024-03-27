@@ -136,6 +136,11 @@ paths:
           description: Filtro para busca por nome do cooperado.
           required: false
           type: string
+        - name: stat
+          in: query
+          description: Filtro para busca por status.
+          required: false
+          type: string
       responses:
         200:
           description: Perfil do membro recuperado com sucesso.
